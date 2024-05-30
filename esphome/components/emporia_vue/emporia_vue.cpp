@@ -67,6 +67,17 @@ void EmporiaVueComponent::update() {
              sensor_reading.sequence_num - this->last_sequence_num_ - 1);
   }
 
+    char* px = (char*)&sensor_reading;
+    char asciiString[1000];   // 2 characters per byte plus a null at the end.
+
+    for (int i = 0; i < 0x150; i++) {
+        snprintf(asciiString + 2*i , 0x150, "%02X", *(px + i));
+    }
+
+    std::string s1  = std::string(asciiString);
+
+    ESP_LOGE(TAG, "RX %s", s1.c_str());
+
   for (auto *phase : this->phases_) {
     phase->update_from_reading(sensor_reading);
   }
